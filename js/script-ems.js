@@ -50,7 +50,7 @@ fmEmpl.addEventListener('submit', (e) => {
     let newEmpl = [valEmplId, valEmplName, valEmplExt, valEmplEmail, valEmplDep];
     // PUSH THE NEW ARRAY TO THE *EXISTING* EMPLOYEES ARRAY
     existingList.push(newEmpl);
-    localStorage.setItem("existingEmpl", JSON.stringify(existingList));
+
     // BUILD THE GRID
     buildGrid();
     // RESET THE FORM
@@ -61,14 +61,19 @@ fmEmpl.addEventListener('submit', (e) => {
 
 // DELETE EMPLOYEE
 empTable.addEventListener('click', (e) => {
+    
     // CONFIRM THE DELETE
-
-        // GET THE SELECTED ROWINDEX FOR THE TR (PARENTNODE.PARENTNODE)
-
-        // REMOVE EMPLOYEE FROM ARRAY
-
+    if(e.target.className=='btn btn-sm bg-danger delete'){
+        if (confirm('Are you sure you want to delete this task?')){
+            // GET THE SELECTED ROWINDEX FOR THE TR (PARENTNODE.PARENTNODE)
+            const btn = e.target;
+            const rowToRemove= btn.parentElement.parentElement.rowIndex;
+            // REMOVE EMPLOYEE FROM ARRAY
+            existingList.splice(rowToRemove-1, 1);
+        }
+    }
         // BUILD THE GRID
-
+        buildGrid();
 });
 
 // BUILD THE EMPLOYEES GRID
@@ -76,7 +81,6 @@ function buildGrid() {
     // REMOVE THE EXISTING SET OF ROWS BY REMOVING THE ENTIRE TBODY SECTION
     tbodyEl.innerHTML='';
     // REBUILD THE TBODY FROM SCRATCH
-    console.log (tbodyEl);
     let dataHTML='';
     for (let empl of existingList){
         dataHTML+=`
@@ -98,9 +102,8 @@ function buildGrid() {
     tbodyEl.innerHTML+=dataHTML;
     // UPDATE EMPLOYEE COUNT
     let count=0;
-
     for (i of existingList){count+=1;}
     counter.value=count;
     // STORE THE ARRAY IN STORAGE
-
+    localStorage.setItem("existingEmpl", JSON.stringify(existingList));
 };
