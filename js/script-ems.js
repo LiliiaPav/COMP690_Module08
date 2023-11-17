@@ -21,15 +21,19 @@ if (existingList==null){
     localStorage.setItem("existingEmpl", JSON.stringify(employees));
     existingList = [...employees];
 }
-
 // GET DOM ELEMENTS
 let fmEmpl = document.getElementById("addForm");
 let tblEmpl = document.getElementById("empTable");
+let tbodyEl = document.getElementsByTagName('tbody')[0];
+let counter = document.getElementById('empCount');
 
-
+console.log(existingList);
 
 // BUILD THE EMPLOYEES TABLE WHEN THE PAGE LOADS
-window.onload = () => {buildGrid()};
+window.onload = () => {
+    buildGrid();
+
+}
 
 // ADD EMPLOYEE
 fmEmpl.addEventListener('submit', (e) => {
@@ -46,6 +50,7 @@ fmEmpl.addEventListener('submit', (e) => {
     let newEmpl = [valEmplId, valEmplName, valEmplExt, valEmplEmail, valEmplDep];
     // PUSH THE NEW ARRAY TO THE *EXISTING* EMPLOYEES ARRAY
     existingList.push(newEmpl);
+    localStorage.setItem("existingEmpl", JSON.stringify(existingList));
     // BUILD THE GRID
     buildGrid();
     // RESET THE FORM
@@ -69,9 +74,8 @@ empTable.addEventListener('click', (e) => {
 // BUILD THE EMPLOYEES GRID
 function buildGrid() {
     // REMOVE THE EXISTING SET OF ROWS BY REMOVING THE ENTIRE TBODY SECTION
-
+    tbodyEl.innerHTML='';
     // REBUILD THE TBODY FROM SCRATCH
-    let tbodyEl = document.getElementsByTagName('tbody')[0];
     console.log (tbodyEl);
     let dataHTML='';
     for (let empl of existingList){
@@ -85,17 +89,18 @@ function buildGrid() {
             <td><button class='btn btn-sm bg-danger delete'>X</button></td>
         </tr>
     `;
-
     }
-    tbodyEl.innerHTML+=dataHTML;
-    console.log (tblEmpl);
+    
     // LOOP THROUGH THE ARRAY OF EMPLOYEES
     // REBUILDING THE ROW STRUCTURE
 
     // BIND THE TBODY TO THE EMPLOYEE TABLE
-
+    tbodyEl.innerHTML+=dataHTML;
     // UPDATE EMPLOYEE COUNT
+    let count=0;
 
+    for (i of existingList){count+=1;}
+    counter.value=count;
     // STORE THE ARRAY IN STORAGE
 
 };
